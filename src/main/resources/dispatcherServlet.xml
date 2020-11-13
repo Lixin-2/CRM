@@ -6,10 +6,13 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <context:component-scan base-package="com.lixin.crm.settings.web.controller"/>
+    <context:component-scan base-package="com.lixin.crm.handler"/>
 
-    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/WEB-INF/"/>
-        <property name="suffix" value=".jsp"/>
-    </bean>
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/settings/user/**"/>
+            <bean class="com.lixin.crm.handler.CrmLoginInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
     <mvc:annotation-driven/>
 </beans>

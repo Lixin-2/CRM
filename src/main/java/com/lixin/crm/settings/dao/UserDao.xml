@@ -3,7 +3,10 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lixin.crm.settings.dao.UserDao">
-    <select id="" resultType="">
-    
+    <sql id="field">
+         id,loginAct,name,loginPwd,email,expireTime,lockState,deptno,allowIps,createTime,createBy,editTime,editBy
+    </sql>
+    <select id="selectUser" resultType="User">
+        select <include refid="field"/> from tbl_user where loginAct=#{loginAct} and loginPwd=#{loginPwd}
     </select>
 </mapper>
