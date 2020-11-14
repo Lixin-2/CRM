@@ -1,7 +1,3 @@
-/**
- * Simplified Chinese translation for bootstrap-datetimepicker
- * Yuan Cheung <advanimal@gmail.com>
- */
 ;(function($){
 	$.fn.datetimepicker.dates['zh-CN'] = {
 			days: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"],

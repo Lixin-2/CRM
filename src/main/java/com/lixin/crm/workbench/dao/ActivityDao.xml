@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lixin.crm.workbench.dao.ActivityDao">
+    <sql id="field">
+         id,owner,name,startDate,endDate,cost,description,createTime,createBy,editTime,editBy
+    </sql>
+
+    <insert id="insertActivity">
+        insert into tbl_activity (id,owner,name,startDate,endDate,cost,description,createTime,createBy) values (#{id},#{owner},#{name},#{startDate},#{endDate},#{cost},#{description},#{createTime},#{createBy})
+    </insert>
+
+    <select id="selectActivityPageList" resultType="Activity">
+        select a.id,u.name as owner,a.name,a.startDate,a.endDate,a.cost,a.description from tbl_activity a left join tbl_user u on a.owner=u.id
+        <where>
+            <if test="name!=null and name!=''">
+                a.name like '%' #{name} '%'
+            </if>
+            <if test="owner!=null and owner!=''">
+                and u.name like '%' #{owner} '%'
+            </if>
+            <if test="startDate!=null and startDate!=''">
+                and a.startDate &gt;= #{startDate}
+            </if>
+            <if test="endDate!=null and endDate!=''">
+                and a.endDate &lt;= #{endDate}
+            </if>
+        </where>
+        order by a.createTime desc
+    </select>
+    <select id="selectCountTotal" resultType="int">
+        select count(*) from tbl_activity a left join tbl_user u on a.owner=u.id
+        <where>
+            <if test="name!=null and name!=''">
+                a.name like '%' #{name} '%'
+            </if>
+            <if test="owner!=null and owner!=''">
+                and u.name like '%' #{owner} '%'
+            </if>
+            <if test="startDate!=null and startDate!=''">
+                and a.startDate &gt;= #{startDate}
+            </if>
+            <if test="endDate!=null and endDate!=''">
+                and a.endDate &lt;= #{endDate}
+            </if>
+        </where>
+    </select>
+    <delete id="deleteActivityByIds">
+        delete from tbl_activity where id in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="selectActivityById" resultType="Activity">
+        select <include refid="field"/> from tbl_activity where id=#{id}
+    </select>
+    <update id="updateActivity">
+        update tbl_activity set owner=#{owner},name=#{name},startDate=#{startDate},endDate=#{endDate},cost=#{cost},description=#{description},editTime=#{editTime},editBy=#{editBy} where id=#{id}
+    </update>
+</mapper>

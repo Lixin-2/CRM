@@ -17,7 +17,7 @@ import java.util.Map;
 public class UserController {
 
     @Autowired
-    UserService userService = null;
+    private UserService userService = null;
 
     @RequestMapping("/login.do")
     @ResponseBody

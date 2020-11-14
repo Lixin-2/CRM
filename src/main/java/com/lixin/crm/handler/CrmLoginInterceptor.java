@@ -13,7 +13,6 @@ public class CrmLoginInterceptor implements HandlerInterceptor {
         if(user != null || request.getServletPath().contains("login")){
             return true;
         }else{
-            System.out.println(2);
             response.sendRedirect(request.getContextPath()+"/login.jsp");
             return false;
         }

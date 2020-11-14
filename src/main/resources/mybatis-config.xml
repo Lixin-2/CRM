@@ -6,11 +6,15 @@
     <settings>
         <setting name="logImpl" value="STDOUT_LOGGING"/>
     </settings>
+
     <typeAliases>
         <package name="com.lixin.crm.settings.domain"/>
+        <package name="com.lixin.crm.workbench.domain"/>
     </typeAliases>
 
     <mappers>
         <package name="com.lixin.crm.settings.dao"/>
+        <package name="com.lixin.crm.workbench.dao"/>
     </mappers>
+
 </configuration>
