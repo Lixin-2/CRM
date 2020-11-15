@@ -6,6 +6,7 @@ import com.lixin.crm.settings.service.UserService;
 import com.lixin.crm.utils.DateTimeUtil;
 import com.lixin.crm.utils.UUIDUtil;
 import com.lixin.crm.workbench.domain.Activity;
+import com.lixin.crm.workbench.domain.ActivityRemark;
 import com.lixin.crm.workbench.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -82,7 +83,55 @@ public class ActivityController {
         return info;
     }
 
+    @RequestMapping("/selectActivityById.do")
+    private String selectActivityById(HttpServletRequest request,String id){
+        Activity activity = activityService.selectActivityByIdForOwner(id);
+        request.setAttribute("activity",activity);
+        return "forward:/workbench/activity/detail.jsp";
+    }
 
+    @RequestMapping("/getRemarkListByAid.do")
+    @ResponseBody
+    private List<ActivityRemark> getRemarkListByAid(String activityId){
+        List<ActivityRemark> activityRemarks = activityService.selectActivityRemarkByAId(activityId);
+        return activityRemarks;
+    }
+
+    @RequestMapping("/deleteRemarkById.do")
+    @ResponseBody
+    private Map<String,Object> deleteRemarkById(String id){
+        activityService.deleteActivityRemarkById(id);
+        Map<String,Object> info = new HashMap<>();
+        info.put("success",true);
+        return info;
+    }
+
+    @RequestMapping("/saveActivityRemark.do")
+    @ResponseBody
+    private Map<String,Object> saveActivityRemark(HttpServletRequest request,ActivityRemark activityRemark){
+        activityRemark.setId(UUIDUtil.getUUID());
+        activityRemark.setCreateBy(((User) request.getSession().getAttribute("user")).getName());
+        activityRemark.setCreateTime(DateTimeUtil.getSysTime());
+        activityRemark.setEditFlag("0");
+        activityService.insertActivityRemark(activityRemark);
+        Map<String,Object> info = new HashMap<>();
+        info.put("success",true);
+        info.put("activityRemark",activityRemark);
+        return info;
+    }
+
+    @RequestMapping("/updateRemark.do")
+    @ResponseBody
+    private Map<String,Object> updateRemark(HttpServletRequest request,ActivityRemark activityRemark){
+        activityRemark.setEditBy(((User) request.getSession().getAttribute("user")).getName());
+        activityRemark.setEditTime(DateTimeUtil.getSysTime());
+        activityRemark.setEditFlag("1");
+        activityService.updateActivityRemark(activityRemark);
+        Map<String,Object> info = new HashMap<>();
+        info.put("success",true);
+        info.put("activityRemark",activityRemark);
+        return info;
+    }
 
 
 }
