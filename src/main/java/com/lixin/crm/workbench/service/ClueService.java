@@ -16,4 +16,6 @@ public interface ClueService {
     void deleteClueByIds(String[] id);
 
     Clue selectClueById(String id);
+
+    void updateClue(Clue clue);
 }

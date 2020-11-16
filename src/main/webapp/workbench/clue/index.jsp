@@ -171,6 +171,41 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
                 })
             }
         })
+
+		$("#updateBtn").click(function () {
+			$.ajax({
+				url:"workbench/clue/updateClue.do",
+				data:{
+					"id":$.trim($("#edit-clueId").val()),
+					"fullname":$.trim($("#edit-surname").val()),
+					"appellation":$.trim($("#edit-call").val()),
+					"owner":$.trim($("#edit-clueOwner").val()),
+					"company":$.trim($("#edit-company").val()),
+					"job":$.trim($("#edit-job").val()),
+					"email":$.trim($("#edit-email").val()),
+					"phone":$.trim($("#edit-phone").val()),
+					"website":$.trim($("#edit-website").val()),
+					"mphone":$.trim($("#edit-mphone").val()),
+					"state":$.trim($("#edit-status").val()),
+					"source":$.trim($("#edit-source").val()),
+					"description":$.trim($("#edit-describe").val()),
+					"contactSummary":$.trim($("#edit-contactSummary").val()),
+					"nextContactTime":$.trim($("#edit-nextContactTime").val()),
+					"address":$.trim($("#edit-address").val())
+				},
+				type:"post",
+				dataType:"json",
+				success:function (data) {
+					if (data.success){
+						pageList($("#activityPage").bs_pagination('getOption', 'currentPage'),$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
+						$("#editClueModal").modal("hide")
+					}else{
+						alert(data.msg)
+					}
+				}
+			})
+		})
+
 	});
 
 	function pageList(pageNo,pageSize){
@@ -531,7 +566,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">更新</button>
+					<button type="button" class="btn btn-primary" id="updateBtn">更新</button>
 				</div>
 			</div>
 		</div>

@@ -3,6 +3,7 @@ package com.lixin.crm.workbench.web.controller;
 import com.lixin.crm.settings.domain.User;
 import com.lixin.crm.utils.DateTimeUtil;
 import com.lixin.crm.utils.UUIDUtil;
+import com.lixin.crm.workbench.domain.Activity;
 import com.lixin.crm.workbench.domain.Clue;
 import com.lixin.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,5 +67,16 @@ public class ClueController {
         return usersAndClue;
     }
 
+
+    @RequestMapping("/updateClue.do")
+    @ResponseBody
+    private Map<String,Object> updateClue(HttpServletRequest request , Clue clue){
+        clue.setEditBy(((User) request.getSession().getAttribute("user")).getName());
+        clue.setEditTime(DateTimeUtil.getSysTime());
+        clueService.updateClue(clue);
+        Map<String,Object> info = new HashMap<>();
+        info.put("success",true);
+        return info;
+    }
 
 }

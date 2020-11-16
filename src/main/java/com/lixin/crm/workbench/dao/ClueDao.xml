@@ -34,8 +34,8 @@
             </if>
         </where>
         order by createTime desc
-
     </select>
+
     <select id="selectCountTotal" resultType="int">
         select count(*) from tbl_clue c left join tbl_user u on c.owner=u.id
         <where>
@@ -62,6 +62,7 @@
             </if>
         </where>
     </select>
+
     <delete id="deleteClueByIds">
         delete from tbl_clue where id in
         <foreach collection="array" item="id" open="(" close=")" separator=",">
@@ -72,7 +73,10 @@
     <select id="selectClueById" resultType="Clue">
         select id,fullname,appellation,owner,company,job,email,phone,website,mphone,state,source,createBy,createTime,editBy,editTime,description,contactSummary,nextContactTime,address from tbl_clue where id=#{id}
     </select>
-  	
+
+    <update id="updateClue">
+        update tbl_clue set fullname=#{fullname},appellation=#{appellation},owner=#{owner},company=#{company},job=#{job},email=#{email},phone=#{phone},website=#{website},mphone=#{mphone},state=#{state},source=#{source},editBy=#{editBy},editTime=#{editTime},description=#{description},contactSummary=#{contactSummary},nextContactTime=#{nextContactTime},address=#{address} where id=#{id}
+    </update>
 </mapper>
 
 
