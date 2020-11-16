@@ -8,6 +8,7 @@ import com.lixin.crm.workbench.dao.ClueDao;
 import com.lixin.crm.workbench.dao.ClueRemarkDao;
 import com.lixin.crm.workbench.dao.ContactsActivityRelationDao;
 import com.lixin.crm.workbench.domain.Clue;
+import com.lixin.crm.workbench.domain.ClueRemark;
 import com.lixin.crm.workbench.exception.ClueException;
 import com.lixin.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,5 +80,35 @@ public class ClueServiceImpl implements ClueService {
     public Clue selectClueByIdForOwner(String id) {
         Clue clue = clueDao.selectClueByIdForOwner(id);
         return clue;
+    }
+
+    @Override
+    public List<ClueRemark> selectClueRemarkByCId(String clueId) {
+        List<ClueRemark> clueRemarks = clueRemarkDao.selectClueRemarkByCId(clueId);
+        return clueRemarks;
+    }
+
+    @Override
+    public void deleteClueRemarkById(String id) {
+        int num = clueRemarkDao.deleteClueRemarkById(id);
+        if (num != 1){
+            throw new ClueException("删除线索备注失败！");
+        }
+    }
+
+    @Override
+    public void insertClueRemark(ClueRemark clueRemark) {
+        int num = clueRemarkDao.insertClueRemark(clueRemark);
+        if (num != 1){
+            throw new ClueException("添加线索备注失败！");
+        }
+    }
+
+    @Override
+    public void updateClueRemark(ClueRemark clueRemark) {
+        int num = clueRemarkDao.updateClueRemark(clueRemark);
+        if (num != 1){
+            throw new ClueException("更新线索备注失败！");
+        }
     }
 }

@@ -4,7 +4,9 @@ import com.lixin.crm.settings.domain.User;
 import com.lixin.crm.utils.DateTimeUtil;
 import com.lixin.crm.utils.UUIDUtil;
 import com.lixin.crm.workbench.domain.Activity;
+import com.lixin.crm.workbench.domain.ActivityRemark;
 import com.lixin.crm.workbench.domain.Clue;
+import com.lixin.crm.workbench.domain.ClueRemark;
 import com.lixin.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -84,6 +86,49 @@ public class ClueController {
         Clue clue = clueService.selectClueByIdForOwner(id);
         request.setAttribute("clue",clue);
         return "forward:/workbench/clue/detail.jsp";
+    }
+
+    @RequestMapping("/getRemarkListByCid.do")
+    @ResponseBody
+    private List<ClueRemark> getRemarkListByCid(String clueId){
+        List<ClueRemark> clueRemarks = clueService.selectClueRemarkByCId(clueId);
+        return clueRemarks;
+    }
+
+    @RequestMapping("/deleteRemarkById.do")
+    @ResponseBody
+    private Map<String,Object> deleteRemarkById(String id){
+        clueService.deleteClueRemarkById(id);
+        Map<String,Object> info = new HashMap<>();
+        info.put("success",true);
+        return info;
+    }
+
+    @RequestMapping("/saveClueRemark.do")
+    @ResponseBody
+    private Map<String,Object> saveClueRemark(HttpServletRequest request,ClueRemark clueRemark){
+        clueRemark.setId(UUIDUtil.getUUID());
+        clueRemark.setCreateBy(((User) request.getSession().getAttribute("user")).getName());
+        clueRemark.setCreateTime(DateTimeUtil.getSysTime());
+        clueRemark.setEditFlag("0");
+        clueService.insertClueRemark(clueRemark);
+        Map<String,Object> info = new HashMap<>();
+        info.put("success",true);
+        info.put("clueRemark",clueRemark);
+        return info;
+    }
+
+    @RequestMapping("/updateRemark.do")
+    @ResponseBody
+    private Map<String,Object> updateRemark(HttpServletRequest request,ClueRemark clueRemark){
+        clueRemark.setEditBy(((User) request.getSession().getAttribute("user")).getName());
+        clueRemark.setEditTime(DateTimeUtil.getSysTime());
+        clueRemark.setEditFlag("1");
+        clueService.updateClueRemark(clueRemark);
+        Map<String,Object> info = new HashMap<>();
+        info.put("success",true);
+        info.put("clueRemark",clueRemark);
+        return info;
     }
 
 }

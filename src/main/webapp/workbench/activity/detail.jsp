@@ -111,7 +111,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
             $.ajax({
                 url:"workbench/activity/updateRemark.do",
                 data:{
-                    "id":$("#activityRemarkId").val(),
+                    "id":$("#remarkId").val(),
                     "noteContent":$.trim($("#noteContent").val())
                 },
                 type:"post",
@@ -182,6 +182,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
                 dataType:"json",
                 success:function (data) {
                     if(data.success){
+                        $("#editActivityModal").modal("hide")
                         location.reload();
                     }else{
                         alert(data.msg)
@@ -242,26 +243,28 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 	}
 
 	function deleteRemark(id) {
-		$.ajax({
-			url:"workbench/activity/deleteRemarkById.do",
-			data:{
-				"id":id,
-			},
-			type:"get",
-			dataType:"json",
-			success:function(data){
-				if(data.success){
-					$("#"+id).remove()
-				}else{
-					alert(data.msg)
-				}
-			}
-		})
+	    if (confirm("确定要删除该备注？")){
+            $.ajax({
+                url:"workbench/activity/deleteRemarkById.do",
+                data:{
+                    "id":id,
+                },
+                type:"get",
+                dataType:"json",
+                success:function(data){
+                    if(data.success){
+                        $("#"+id).remove()
+                    }else{
+                        alert(data.msg)
+                    }
+                }
+            })
+        }
 	}
 
 	function editRemark(id,noteContent){
         $("#noteContent").val(noteContent)
-        $("#activityRemarkId").val(id)
+        $("#remarkId").val(id)
         $("#editRemarkModal").modal("show")
     }
 
@@ -285,7 +288,6 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal" role="form">
-                        <input type="hidden" id="activityRemarkId">
                         <div class="form-group">
                             <label for="edit-describe" class="col-sm-2 control-label">内容</label>
                             <div class="col-sm-10" style="width: 81%;">

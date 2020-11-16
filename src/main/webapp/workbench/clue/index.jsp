@@ -104,32 +104,36 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		})
 
 		$("#deleteBtn").click(function () {
-			var $xz = $("input[name=xz]:checked")
-			if ($xz.length == 0){
-				alert("至少选择一条记录！")
-			}else{
-				var param = "";
-				for (var i=0; i<$xz.length; i++){
-					param += "id="+$($xz[i]).val();
-					if(i<$xz.length-1){
-						param += "&"
-					}
-				}
-				$.ajax({
-					url:"workbench/clue/deleteClueByIds.do",
-					data:param,
-					type:"post",
-					dataType:"json",
-					success:function (data) {
-						if (data.success){
-							pageList(1,$("#activityPage").bs_pagination('getOption', 'rowsPerPage'))
-						}else{
-							alert(data.msg)
+			if(confirm("确定要删除选中的记录吗？")){
+				var $xz = $("input[name=xz]:checked")
+				if ($xz.length == 0){
+					alert("至少选择一条记录！")
+				}else{
+					var param = "";
+					for (var i=0; i<$xz.length; i++){
+						param += "id="+$($xz[i]).val();
+						if(i<$xz.length-1){
+							param += "&"
 						}
 					}
-				})
+					$.ajax({
+						url:"workbench/clue/deleteClueByIds.do",
+						data:param,
+						type:"post",
+						dataType:"json",
+						success:function (data) {
+							if (data.success){
+								pageList(1,$("#activityPage").bs_pagination('getOption', 'rowsPerPage'))
+							}else{
+								alert(data.msg)
+							}
+						}
+					})
+				}
 			}
 		})
+
+
 		$("#editBtn").click(function () {
             var $xz = $("input[name=xz]:checked")
             if ($xz.length == 0){
@@ -546,7 +550,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							<div class="form-group">
 								<label for="edit-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
 								<div class="col-sm-10" style="width: 300px;">
-									<input type="text" class="form-control" id="edit-nextContactTime">
+									<input type="text" class="form-control time" id="edit-nextContactTime">
 								</div>
 							</div>
 						</div>

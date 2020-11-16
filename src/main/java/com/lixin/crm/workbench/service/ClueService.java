@@ -2,6 +2,7 @@ package com.lixin.crm.workbench.service;
 
 import com.lixin.crm.settings.domain.User;
 import com.lixin.crm.workbench.domain.Clue;
+import com.lixin.crm.workbench.domain.ClueRemark;
 
 import java.util.List;
 import java.util.Map;
@@ -20,4 +21,12 @@ public interface ClueService {
     void updateClue(Clue clue);
 
     Clue selectClueByIdForOwner(String id);
+
+    List<ClueRemark> selectClueRemarkByCId(String clueId);
+
+    void deleteClueRemarkById(String id);
+
+    void insertClueRemark(ClueRemark clueRemark);
+
+    void updateClueRemark(ClueRemark clueRemark);
 }
