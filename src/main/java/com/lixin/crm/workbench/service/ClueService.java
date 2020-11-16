@@ -18,4 +18,6 @@ public interface ClueService {
     Clue selectClueById(String id);
 
     void updateClue(Clue clue);
+
+    Clue selectClueByIdForOwner(String id);
 }

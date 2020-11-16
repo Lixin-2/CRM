@@ -19,4 +19,6 @@ public interface ClueDao {
     Clue selectClueById(String id);
 
     void updateClue(Clue clue);
+
+    Clue selectClueByIdForOwner(String id);
 }

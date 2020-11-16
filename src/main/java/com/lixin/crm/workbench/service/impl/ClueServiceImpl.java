@@ -74,4 +74,10 @@ public class ClueServiceImpl implements ClueService {
     public void updateClue(Clue clue) {
         clueDao.updateClue(clue);
     }
+
+    @Override
+    public Clue selectClueByIdForOwner(String id) {
+        Clue clue = clueDao.selectClueByIdForOwner(id);
+        return clue;
+    }
 }

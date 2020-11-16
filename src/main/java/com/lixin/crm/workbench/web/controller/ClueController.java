@@ -79,4 +79,11 @@ public class ClueController {
         return info;
     }
 
+    @RequestMapping("/selectClueById.do")
+    private String selectClueById(HttpServletRequest request,String id){
+        Clue clue = clueService.selectClueByIdForOwner(id);
+        request.setAttribute("clue",clue);
+        return "forward:/workbench/clue/detail.jsp";
+    }
+
 }
