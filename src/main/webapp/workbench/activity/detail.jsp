@@ -9,15 +9,28 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 <meta charset="UTF-8">
 
 <link href="jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+<link href="jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="jquery/bs_pagination/jquery.bs_pagination.min.css">
 <script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
 <script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
-
+<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/datatime.js"></script>
 <script type="text/javascript">
 
 	//默认情况下取消和保存按钮是隐藏的
 	var cancelAndSaveBtnDefault = true;
 	
 	$(function(){
+
+        $(".time").datetimepicker({
+            minView: "month",
+            language:  'zh-CN',
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayBtn: true,
+            pickerPosition: "bottom-left"
+        });
+
 		$("#remark").focus(function(){
 			if(cancelAndSaveBtnDefault){
 				//设置remarkDiv的高度为130px
@@ -125,6 +138,78 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
             })
         })
 
+        $("#editBtn").click(function () {
+            $.ajax({
+                url:"workbench/activity/getUsersAndActivityById.do",
+                data:{
+                    "id":"${activity.id}"
+                },
+                type:"post",
+                dataType:"json",
+                success:function(data){
+                    var html = ""
+                    $.each(data.users,function (i,n) {
+                        html+='<option value="'+n.id+'">'+n.name+'</option>'
+                    })
+                    $("#edit-marketActivityOwner").html(html)
+                    $("#edit-marketActivityOwner").val(data.activity.id)
+                    $("#edit-activityId").val(data.activity.id)
+                    $("#edit-marketActivityOwner").val(data.activity.owner)
+                    $("#edit-marketActivityName").val(data.activity.name)
+                    $("#edit-startTime").val(data.activity.startDate)
+                    $("#edit-endTime").val(data.activity.endDate)
+                    $("#edit-cost").val(data.activity.cost)
+                    $("#edit-describe").val(data.activity.description)
+                    $("#editActivityModal").modal("show")
+
+                }
+            })
+        })
+        
+        $("#updateBtn").click(function () {
+            $.ajax({
+                url:"workbench/activity/updateActivity.do",
+                data:{
+                    "id" : $("#edit-activityId").val(),
+                    "owner" : $("#edit-marketActivityOwner").val(),
+                    "name" : $.trim($("#edit-marketActivityName").val()),
+                    "startDate" : $.trim($("#edit-startTime").val()),
+                    "endDate" : $.trim($("#edit-endTime").val()),
+                    "cost" : $.trim($("#edit-cost").val()),
+                    "description" : $.trim($("#edit-describe").val())
+                },
+                type:"post",
+                dataType:"json",
+                success:function (data) {
+                    if(data.success){
+                        location.reload();
+                    }else{
+                        alert(data.msg)
+                    }
+                }
+            })
+        })
+
+        $("#deleteBtn").click(function () {
+            if (confirm("确定要删除该市场活动？")){
+                $.ajax({
+                    url:"workbench/activity/deleteActivityByIds.do",
+                    data:{
+                        "id":"${activity.id}"
+                    },
+                    type:"post",
+                    dataType:"json",
+                    success:function (data){
+                        if (data.success){
+                            window.location.replace(document.referrer);
+                        }else{
+                            alert(data.msg)
+                        }
+                    }
+                })
+            }
+        })
+
 	});
 
 	function showRemarkList() {
@@ -179,7 +264,8 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
         $("#activityRemarkId").val(id)
         $("#editRemarkModal").modal("show")
     }
-	
+
+
 </script>
 
 </head>
@@ -230,43 +316,42 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 
                     <form class="form-horizontal" role="form">
 
+                        <input type="hidden" id="edit-activityId">
                         <div class="form-group">
                             <label for="edit-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
                             <div class="col-sm-10" style="width: 300px;">
                                 <select class="form-control" id="edit-marketActivityOwner">
-                                    <option>zhangsan</option>
-                                    <option>lisi</option>
-                                    <option>wangwu</option>
+
                                 </select>
                             </div>
                             <label for="edit-marketActivityName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-marketActivityName" value="发传单">
+                                <input type="text" class="form-control" id="edit-marketActivityName">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="edit-startTime" class="col-sm-2 control-label">开始日期</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-startTime" value="2020-10-10">
+                                <input type="text" class="form-control time" id="edit-startTime">
                             </div>
                             <label for="edit-endTime" class="col-sm-2 control-label">结束日期</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-endTime" value="2020-10-20">
+                                <input type="text" class="form-control time" id="edit-endTime">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="edit-cost" class="col-sm-2 control-label">成本</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-cost" value="5,000">
+                                <input type="text" class="form-control" id="edit-cost">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="edit-describe" class="col-sm-2 control-label">描述</label>
                             <div class="col-sm-10" style="width: 81%;">
-                                <textarea class="form-control" rows="3" id="edit-describe">市场活动Marketing，是指品牌主办或参与的展览会议与公关市场活动，包括自行主办的各类研讨会、客户交流会、演示会、新产品发布会、体验会、答谢会、年会和出席参加并布展或演讲的展览会、研讨会、行业交流会、颁奖典礼等</textarea>
+                                <textarea class="form-control" rows="3" id="edit-describe"></textarea>
                             </div>
                         </div>
 
@@ -275,7 +360,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">更新</button>
+                    <button type="button" class="btn btn-primary" id="updateBtn">更新</button>
                 </div>
             </div>
         </div>
@@ -292,8 +377,8 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			<h3>市场活动-${activity.name} <small>${activity.startDate} ~ ${activity.endDate}</small></h3>
 		</div>
 		<div style="position: relative; height: 50px; width: 250px;  top: -72px; left: 700px;">
-			<button type="button" class="btn btn-default" data-toggle="modal" data-target="#editActivityModal"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
-			<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+			<button type="button" class="btn btn-default" id="editBtn"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
+			<button type="button" class="btn btn-danger" id="deleteBtn"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 		</div>
 	</div>
 	

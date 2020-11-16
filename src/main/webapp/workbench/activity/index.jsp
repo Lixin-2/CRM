@@ -16,6 +16,9 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 <script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
 <script type="text/javascript" src="jquery/bs_pagination/jquery.bs_pagination.min.js"></script>
+<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/datatime.js"></script>
+<script type="text/javascript" src="jquery/bs_pagination/en1.js"></script>
+
 
 
 	<script type="text/javascript">
@@ -142,6 +145,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							html += "<option value='"+n.id+"'>"+n.name+"</option>"
 						})
 						$("#edit-marketActivityOwner").html(html)
+						$("#edit-marketActivityOwner").val(data.activity.id)
 						$("#edit-marketActivityId").val(data.activity.id)
 						$("#edit-marketActivityOwner").val(data.activity.owner)
 						$("#edit-marketActivityName").val(data.activity.name)
@@ -244,32 +248,6 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			}
 		})
 	}
-
-	$.fn.datetimepicker.dates['zh-CN'] = {
-		days: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"],
-		daysShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六", "周日"],
-		daysMin:  ["日", "一", "二", "三", "四", "五", "六", "日"],
-		months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
-		monthsShort: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
-		today: "今天",
-		suffix: [],
-		meridiem: ["上午", "下午"]
-	};
-
-	var rsc_bs_pag = {
-		go_to_page_title: 'Go to page',
-		rows_per_page_title: 'Rows per page',
-		current_page_label: 'Page',
-		current_page_abbr_label: 'p.',
-		total_pages_label: 'of',
-		total_pages_abbr_label: '/',
-		total_rows_label: 'of',
-		rows_info_records: 'records',
-		go_top_text: '上一页',
-		go_prev_text: '首页',
-		go_next_text: '下一页',
-		go_last_text: '末页'
-	};
 	
 </script>
 </head>

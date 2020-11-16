@@ -2,6 +2,7 @@
 <%
 String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 	request.getServerPort() + request.getContextPath() + "/";
 %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,19 +15,117 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 <script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
 <script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
-<script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
 
 <script type="text/javascript">
 
 	$(function(){
-		
-		
+
+		pageList(1,$("#pageSize").val())
+
+		$(".time").datetimepicker({
+			minView: "month",
+			language:  'zh-CN',
+			format: 'yyyy-mm-dd',
+			autoclose: true,
+			todayBtn: true,
+			pickerPosition: "top-left"
+		});
+
+		$("#createBtn").click(function () {
+			$.ajax({
+				url:"workbench/clue/getUsers.do",
+				type:"get",
+				dataType:"json",
+				success:function (data) {
+					var html = ""
+					$.each(data,function (i,n) {
+						html+='<option value="'+n.id+'">'+n.name+'</option>'
+					})
+					$("#create-clueOwner").html(html);
+					$("#create-clueOwner").val("${user.id}")
+					$("#createClueModal").modal("show")
+				}
+			})
+		})
+
+		$("#saveBtn").click(function () {
+			$.ajax({
+				url:"workbench/clue/saveClue.do",
+				data:{
+					"fullname":$.trim($("#create-surname").val()),
+					"appellation":$.trim($("#create-call").val()),
+					"owner":$.trim($("#create-clueOwner").val()),
+					"company":$.trim($("#create-company").val()),
+					"job":$.trim($("#create-job").val()),
+					"email":$.trim($("#create-email").val()),
+					"phone":$.trim($("#create-phone").val()),
+					"website":$.trim($("#create-website").val()),
+					"mphone":$.trim($("#create-mphone").val()),
+					"state":$.trim($("#create-status").val()),
+					"source":$.trim($("#create-source").val()),
+					"description":$.trim($("#create-describe").val()),
+					"contactSummary":$.trim($("#create-contactSummary").val()),
+					"nextContactTime":$.trim($("#create-nextContactTime").val()),
+					"address":$.trim($("#create-address").val())
+				},
+				type:"post",
+				dataType: "json",
+				success:function (data) {
+					if (data.success){
+						$("#clueCreateForm")[0].reset()
+						$("#createClueModal").modal("hide")
+						pageList(1,$("#activityPage").bs_pagination('getOption', 'rowsPerPage'))
+					}else {
+						alert(data.msg)
+					}
+				}
+			})
+		})
 		
 	});
+
+	function pageList(pageNo,pageSize){
+
+	}
+
+	$.fn.datetimepicker.dates['zh-CN'] = {
+		days: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"],
+		daysShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+		daysMin:  ["日", "一", "二", "三", "四", "五", "六", "日"],
+		months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+		monthsShort: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+		today: "今天",
+		suffix: [],
+		meridiem: ["上午", "下午"]
+	};
+
+	var rsc_bs_pag = {
+		go_to_page_title: 'Go to page',
+		rows_per_page_title: 'Rows per page',
+		current_page_label: 'Page',
+		current_page_abbr_label: 'p.',
+		total_pages_label: 'of',
+		total_pages_abbr_label: '/',
+		total_rows_label: 'of',
+		rows_info_records: 'records',
+		go_top_text: '上一页',
+		go_prev_text: '首页',
+		go_next_text: '下一页',
+		go_last_text: '末页'
+	};
 	
 </script>
 </head>
 <body>
+
+	<input type="hidden" id="pageSize" value="7">
+	<input type="hidden" id="fullname">
+	<input type="hidden" id="company">
+	<input type="hidden" id="phone">
+	<input type="hidden" id="source">
+	<input type="hidden" id="owner">
+	<input type="hidden" id="mphone">
+	<input type="hidden" id="state">
 
 	<!-- 创建线索的模态窗口 -->
 	<div class="modal fade" id="createClueModal" role="dialog">
@@ -39,15 +138,13 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					<h4 class="modal-title" id="myModalLabel">创建线索</h4>
 				</div>
 				<div class="modal-body">
-					<form class="form-horizontal" role="form">
+					<form class="form-horizontal" role="form" id="clueCreateForm">
 					
 						<div class="form-group">
 							<label for="create-clueOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
 								<select class="form-control" id="create-clueOwner">
-								  <option>zhangsan</option>
-								  <option>lisi</option>
-								  <option>wangwu</option>
+
 								</select>
 							</div>
 							<label for="create-company" class="col-sm-2 control-label">公司<span style="font-size: 15px; color: red;">*</span></label>
@@ -61,11 +158,9 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							<div class="col-sm-10" style="width: 300px;">
 								<select class="form-control" id="create-call">
 								  <option></option>
-								  <option>先生</option>
-								  <option>夫人</option>
-								  <option>女士</option>
-								  <option>博士</option>
-								  <option>教授</option>
+								  <c:forEach items="${appellation}" var="a">
+									  <option value="${a.value}">${a.text}</option>
+								  </c:forEach>
 								</select>
 							</div>
 							<label for="create-surname" class="col-sm-2 control-label">姓名<span style="font-size: 15px; color: red;">*</span></label>
@@ -105,13 +200,9 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							<div class="col-sm-10" style="width: 300px;">
 								<select class="form-control" id="create-status">
 								  <option></option>
-								  <option>试图联系</option>
-								  <option>将来联系</option>
-								  <option>已联系</option>
-								  <option>虚假线索</option>
-								  <option>丢失线索</option>
-								  <option>未联系</option>
-								  <option>需要条件</option>
+								  <c:forEach items="${clueState}" var="c">
+									  <option value="${c.value}">${c.text}</option>
+								  </c:forEach>
 								</select>
 							</div>
 						</div>
@@ -121,20 +212,9 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							<div class="col-sm-10" style="width: 300px;">
 								<select class="form-control" id="create-source">
 								  <option></option>
-								  <option>广告</option>
-								  <option>推销电话</option>
-								  <option>员工介绍</option>
-								  <option>外部介绍</option>
-								  <option>在线商场</option>
-								  <option>合作伙伴</option>
-								  <option>公开媒介</option>
-								  <option>销售邮件</option>
-								  <option>合作伙伴研讨会</option>
-								  <option>内部研讨会</option>
-								  <option>交易会</option>
-								  <option>web下载</option>
-								  <option>web调研</option>
-								  <option>聊天</option>
+								  <c:forEach items="${source}" var="sou">
+									  <option value="${sou.value}">${sou.text}</option>
+								  </c:forEach>
 								</select>
 							</div>
 						</div>
@@ -159,7 +239,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							<div class="form-group">
 								<label for="create-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
 								<div class="col-sm-10" style="width: 300px;">
-									<input type="text" class="form-control" id="create-nextContactTime">
+									<input type="text" class="form-control time" id="create-nextContactTime">
 								</div>
 							</div>
 						</div>
@@ -179,7 +259,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+					<button type="button" class="btn btn-primary" id="saveBtn">保存</button>
 				</div>
 			</div>
 		</div>
@@ -385,20 +465,9 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				      <div class="input-group-addon">线索来源</div>
 					  <select class="form-control">
 					  	  <option></option>
-					  	  <option>广告</option>
-						  <option>推销电话</option>
-						  <option>员工介绍</option>
-						  <option>外部介绍</option>
-						  <option>在线商场</option>
-						  <option>合作伙伴</option>
-						  <option>公开媒介</option>
-						  <option>销售邮件</option>
-						  <option>合作伙伴研讨会</option>
-						  <option>内部研讨会</option>
-						  <option>交易会</option>
-						  <option>web下载</option>
-						  <option>web调研</option>
-						  <option>聊天</option>
+					  	  <c:forEach items="${source}" var="sou">
+							  <option value="${sou.value}">${sou.text}</option>
+						  </c:forEach>
 					  </select>
 				    </div>
 				  </div>
@@ -426,13 +495,9 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				      <div class="input-group-addon">线索状态</div>
 					  <select class="form-control">
 					  	<option></option>
-					  	<option>试图联系</option>
-					  	<option>将来联系</option>
-					  	<option>已联系</option>
-					  	<option>虚假线索</option>
-					  	<option>丢失线索</option>
-					  	<option>未联系</option>
-					  	<option>需要条件</option>
+					  	<c:forEach items="${clueState}" var="c">
+							<option value="${c.value}">${c.text}</option>
+						</c:forEach>
 					  </select>
 				    </div>
 				  </div>
@@ -443,7 +508,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			</div>
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 40px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
-				  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createClueModal"><span class="glyphicon glyphicon-plus"></span> 创建</button>
+				  <button type="button" class="btn btn-primary" id="createBtn"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editClueModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
 				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>

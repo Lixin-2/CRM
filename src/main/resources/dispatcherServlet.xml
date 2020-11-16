@@ -18,6 +18,10 @@
             <mvc:mapping path="/workbench/activity/**"/>
             <bean class="com.lixin.crm.handler.CrmLoginInterceptor"/>
         </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/workbench/clue/**"/>
+            <bean class="com.lixin.crm.handler.CrmLoginInterceptor"/>
+        </mvc:interceptor>
     </mvc:interceptors>
     <mvc:annotation-driven/>
 </beans>

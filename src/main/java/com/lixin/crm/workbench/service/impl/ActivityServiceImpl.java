@@ -3,6 +3,8 @@ package com.lixin.crm.workbench.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.lixin.crm.workbench.dao.ActivityDao;
 import com.lixin.crm.workbench.dao.ActivityRemarkDao;
+import com.lixin.crm.workbench.dao.ClueActivityRelationDao;
+import com.lixin.crm.workbench.dao.ContactsActivityRelationDao;
 import com.lixin.crm.workbench.domain.Activity;
 import com.lixin.crm.workbench.domain.ActivityRemark;
 import com.lixin.crm.workbench.exception.ActivityException;
@@ -21,6 +23,10 @@ public class ActivityServiceImpl implements ActivityService {
     private ActivityDao activityDao = null;
     @Autowired
     private ActivityRemarkDao activityRemarkDao = null;
+    @Autowired
+    private ClueActivityRelationDao clueActivityRelationDao = null;
+    @Autowired
+    private ContactsActivityRelationDao contactsActivityRelationDao = null;
 
     @Override
     public void insertActivity(Activity activity) {
@@ -44,6 +50,8 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public void deleteActivityByIds(String[] id) {
         activityRemarkDao.deleteActivityRemarkByActivityIds(id);
+        clueActivityRelationDao.deleteClueActRelByActivityIds(id);
+        contactsActivityRelationDao.deleteConActRelByActivityIds(id);
         int num = activityDao.deleteActivityByIds(id);
         if (num != id.length){
             throw new ActivityException("删除市场活动失败!");
