@@ -4,4 +4,6 @@ public interface ClueActivityRelationDao {
 
 
     void deleteClueActRelByActivityIds(String[] id);
+
+    void deleteClueActRelByClueIds(String[] id);
 }

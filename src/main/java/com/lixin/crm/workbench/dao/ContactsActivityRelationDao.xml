@@ -6,11 +6,11 @@
 <mapper namespace="com.lixin.crm.workbench.dao.ContactsActivityRelationDao">
 	<delete id="deleteConActRelByActivityIds">
         delete from tbl_contacts_activity_relation where activityId in
-        <foreach collection="array" item="id" open="(" close=")" separator=",">
-            #{id}
+        <foreach collection="array" item="aid" open="(" close=")" separator=",">
+            #{aid}
         </foreach>
     </delete>
-  	
+
 </mapper>
 
 

@@ -41,4 +41,30 @@ public class ClueController {
         return info;
     }
 
+    @RequestMapping("/pageList.do")
+    @ResponseBody
+    private Map<String,Object> pageList(Integer pageNo,Integer pageSize,Clue clue){
+        Map<String,Object> cluePageList = clueService.selectCluePageList(pageNo,pageSize,clue);
+        return cluePageList;
+    }
+
+    @RequestMapping("/deleteClueByIds.do")
+    @ResponseBody
+    private Map<String,Object> deleteClueByIds(String[] id){
+        clueService.deleteClueByIds(id);
+        Map<String,Object> info = new HashMap<>();
+        info.put("success",true);
+        return info;
+    }
+
+    @RequestMapping("/getUsersAndClueById.do")
+    @ResponseBody
+    private Map<String,Object> getUsersAndClueById(String id){
+        Map<String,Object> usersAndClue = new HashMap<>();
+        usersAndClue.put("users",clueService.selectUsers());
+        usersAndClue.put("clue",clueService.selectClueById(id));
+        return usersAndClue;
+    }
+
+
 }

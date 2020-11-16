@@ -152,7 +152,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
                         html+='<option value="'+n.id+'">'+n.name+'</option>'
                     })
                     $("#edit-marketActivityOwner").html(html)
-                    $("#edit-marketActivityOwner").val(data.activity.id)
+                    $("#edit-marketActivityOwner").val(data.activity.owner)
                     $("#edit-activityId").val(data.activity.id)
                     $("#edit-marketActivityOwner").val(data.activity.owner)
                     $("#edit-marketActivityName").val(data.activity.name)

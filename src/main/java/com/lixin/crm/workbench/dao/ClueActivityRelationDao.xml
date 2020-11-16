@@ -6,11 +6,17 @@
 <mapper namespace="com.lixin.crm.workbench.dao.ClueActivityRelationDao">
 	<delete id="deleteClueActRelByActivityIds">
         delete from tbl_clue_activity_relation where activityId in
-        <foreach collection="array" item="id" open="(" close=")" separator=",">
-            #{id}
+        <foreach collection="array" item="aid" open="(" close=")" separator=",">
+            #{aid}
         </foreach>
     </delete>
-	
+
+    <delete id="deleteClueActRelByClueIds">
+        delete from tbl_clue_activity_relation where clueId in
+        <foreach collection="array" item="cid" open="(" close=")" separator=",">
+            #{cid}
+        </foreach>
+    </delete>
   	
 </mapper>
 

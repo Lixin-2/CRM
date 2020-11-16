@@ -145,7 +145,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							html += "<option value='"+n.id+"'>"+n.name+"</option>"
 						})
 						$("#edit-marketActivityOwner").html(html)
-						$("#edit-marketActivityOwner").val(data.activity.id)
+						$("#edit-marketActivityOwner").val(data.activity.owner)
 						$("#edit-marketActivityId").val(data.activity.id)
 						$("#edit-marketActivityOwner").val(data.activity.owner)
 						$("#edit-marketActivityName").val(data.activity.name)
@@ -214,11 +214,11 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					html += '	<td>'+n.endDate+'</td>'
 					html += '</tr>'
 				})
-				if (data.dataList.length <pageSize){
+				if (data.dataList.length < pageSize){
 					for(var i=0;i<pageSize-data.dataList.length;i++){
 						html += '<tr class="active">'
 						html += '	<td><input type="checkbox" disabled/></td>'
-						html += '	<td><a style="text-decoration: none; cursor: pointer;"></a></td>'
+						html += '	<td></td>'
 						html += '	<td></td>'
 						html += '	<td></td>'
 						html += '	<td></td>'
