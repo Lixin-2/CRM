@@ -1,6 +1,7 @@
 package com.lixin.crm.workbench.dao;
 
 import com.lixin.crm.workbench.domain.Activity;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -20,4 +21,6 @@ public interface ActivityDao {
     Activity selectActivityByIdForOwner(String id);
 
     List<Activity> selectRelationListByCid(String clueId);
+
+    List<Activity> selectActivityByNameAndNotClueIdForOwner(@Param("name")String name, @Param("clueId") String clueId);
 }

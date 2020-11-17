@@ -65,4 +65,16 @@
     <select id="selectRelationListByCid" resultType="Activity">
         select a.id,u.name as owner,a.name,a.startDate,a.endDate,a.cost,a.description,a.createTime,a.createBy,a.editTime,a.editBy from tbl_activity a left join tbl_user u on a.owner=u.id where a.id in (select activityId from tbl_clue_activity_relation where clueId=#{clueId})
     </select>
+
+    <select id="selectActivityByNameAndNotClueIdForOwner" resultType="Activity">
+        select a.id,u.name as owner,a.name,a.startDate,a.endDate,a.cost,a.description,a.createTime,a.createBy,a.editTime,a.editBy from tbl_activity a left join tbl_user u on a.owner=u.id
+        <where>
+            <if test="name!=null and name!=''">
+                a.name like '%' #{name} '%'
+            </if>
+            <if test="clueId!=null and clueId!=''">
+                and a.id not in (select activityId from tbl_clue_activity_relation where clueId=#{clueId})
+            </if>
+        </where>
+    </select>
 </mapper>

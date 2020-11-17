@@ -147,4 +147,20 @@ public class ClueController {
         return info;
     }
 
+    @RequestMapping("/getActivityByNameAndNotClueId.do")
+    @ResponseBody
+    private List<Activity> getActivityByNameAndNotClueId(String name,String clueId){
+        List<Activity> activities = clueService.selectActivityByNameAndNotClueIdForOwner(name,clueId);
+        return activities;
+    }
+
+    @RequestMapping("/bundActClue.do")
+    @ResponseBody
+    private Map<String,Object> bundActClue(String clueId,String[] activityId){
+        clueService.insertActClueRelation(clueId,activityId);
+        Map<String,Object> info = new HashMap<>();
+        info.put("success",true);
+        return info;
+    }
+
 }

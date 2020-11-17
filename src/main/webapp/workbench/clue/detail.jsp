@@ -230,6 +230,57 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				}
 			})
 		})
+		
+		
+		$("#bundBtn").click(function () {
+			$("#aname").val("")
+			$("#bundModal").modal("show")
+			getActivity()
+		})
+
+		$("#aname").keydown(function (event) {
+			if (event.keyCode==13){
+				getActivity()
+				return false
+			}
+
+		})
+
+		$("#qx").click(function (){
+			$("input[name=xz]").prop("checked",this.checked)
+		})
+		$("#actBody").on("click",$("input[name=xz]"),function () {
+			$("#qx").prop("checked",$("input[name=xz]").length==$("input[name=xz]:checked").length)
+		})
+
+		$("#bundACBtn").click(function () {
+			var $xz = $("input[name=xz]:checked")
+			if($xz == 0){
+				alert("至少选择一条市场活动进行关联！")
+			}else{
+				var param = "clueId=${clue.id}&"
+				for (var i=0;i<$xz.length;i++){
+					param+=("activityId="+$($xz[i]).val())
+					if(i<$xz.length){
+						param+="&"
+					}
+				}
+				$.ajax({
+					url:"workbench/clue/bundActClue.do",
+					data:param,
+					type:"post",
+					dataType:"json",
+					success:function (data) {
+						if (data.success){
+							$("#bundModal").modal("hide")
+							showRelationList()
+						}else{
+							alert("关联市场活动失败!")
+						}
+					}
+				})
+			}
+		})
 
 	});
 
@@ -331,9 +382,33 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				}
 			})
 		}
-
 	}
 
+	function getActivity() {
+		$("#qx").prop("checked",false)
+		$.ajax({
+			url:"workbench/clue/getActivityByNameAndNotClueId.do",
+			data:{
+				"name":$.trim($("#aname").val()),
+				"clueId":"${clue.id}"
+			},
+			type:"post",
+			dataType:"json",
+			success:function (data) {
+				var html = ""
+				$.each(data,function (i,n) {
+					html += '<tr>'
+					html += '	<td><input type="checkbox" name="xz" value="'+n.id+'"/></td>'
+					html += '	<td>'+n.name+'</td>'
+					html += '	<td>'+n.startDate+'</td>'
+					html += '	<td>'+n.endDate+'</td>'
+					html += '	<td>'+n.owner+'</td>'
+					html += '</tr>'
+				})
+				$("#actBody").html(html)
+			}
+		})
+	}
 </script>
 
 </head>
@@ -383,7 +458,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					<div class="btn-group" style="position: relative; top: 18%; left: 8px;">
 						<form class="form-inline" role="form">
 						  <div class="form-group has-feedback">
-						    <input type="text" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
+						    <input type="text" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询" id="aname">
 						    <span class="glyphicon glyphicon-search form-control-feedback"></span>
 						  </div>
 						</form>
@@ -391,7 +466,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					<table id="activityTable" class="table table-hover" style="width: 900px; position: relative;top: 10px;">
 						<thead>
 							<tr style="color: #B3B3B3;">
-								<td><input type="checkbox"/></td>
+								<td><input type="checkbox" id="qx"/></td>
 								<td>名称</td>
 								<td>开始日期</td>
 								<td>结束日期</td>
@@ -399,27 +474,14 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 								<td></td>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td><input type="checkbox"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
-							<tr>
-								<td><input type="checkbox"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
+						<tbody id="actBody">
+
 						</tbody>
 					</table>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">关联</button>
+					<button type="button" class="btn btn-primary" id="bundACBtn">关联</button>
 				</div>
 			</div>
 		</div>
@@ -700,26 +762,13 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 						</tr>
 					</thead>
 					<tbody id="ACRelBody">
-						<tr>
-							<td>发传单</td>
-							<td>2020-10-10</td>
-							<td>2020-10-20</td>
-							<td>zhangsan</td>
-							<td><a href="javascript:void(0);"  style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>
-						</tr>
-						<tr>
-							<td>发传单</td>
-							<td>2020-10-10</td>
-							<td>2020-10-20</td>
-							<td>zhangsan</td>
-							<td><a href="javascript:void(0);"  style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>
-						</tr>
+						
 					</tbody>
 				</table>
 			</div>
 			
 			<div>
-				<a href="javascript:void(0);" data-toggle="modal" data-target="#bundModal" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>关联市场活动</a>
+				<a href="javascript:void(0);" id="bundBtn" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>关联市场活动</a>
 			</div>
 		</div>
 	</div>

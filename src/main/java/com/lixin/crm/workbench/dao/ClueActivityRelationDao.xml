@@ -21,7 +21,10 @@
     <delete id="deleteRelationByCAId">
         delete from tbl_clue_activity_relation where activityId=#{activityId} and clueId=#{clueId}
     </delete>
-  	
+
+    <insert id="insertActClueRelation">
+        insert into tbl_clue_activity_relation (id,clueId,activityId) values (#{id},#{clueId},#{activityId});
+    </insert>
 </mapper>
 
 

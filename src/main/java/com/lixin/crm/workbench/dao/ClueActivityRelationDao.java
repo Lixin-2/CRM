@@ -11,4 +11,6 @@ public interface ClueActivityRelationDao {
 
 
     int deleteRelationByCAId(ClueActivityRelation clueActivityRelation);
+
+    int insertActClueRelation(ClueActivityRelation clueActivityRelation);
 }

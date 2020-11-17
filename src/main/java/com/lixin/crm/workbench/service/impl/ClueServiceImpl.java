@@ -3,6 +3,7 @@ package com.lixin.crm.workbench.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.lixin.crm.settings.dao.UserDao;
 import com.lixin.crm.settings.domain.User;
+import com.lixin.crm.utils.UUIDUtil;
 import com.lixin.crm.workbench.dao.*;
 import com.lixin.crm.workbench.domain.Activity;
 import com.lixin.crm.workbench.domain.Clue;
@@ -124,6 +125,27 @@ public class ClueServiceImpl implements ClueService {
         int num = clueActivityRelationDao.deleteRelationByCAId(clueActivityRelation);
         if (num != 1){
             throw new ClueException("解除市场活动关联失败！");
+        }
+    }
+
+    @Override
+    public List<Activity> selectActivityByNameAndNotClueIdForOwner(String name,String clueId) {
+        List<Activity> activities = activityDao.selectActivityByNameAndNotClueIdForOwner(name,clueId);
+        return activities;
+    }
+
+    @Override
+    public void insertActClueRelation(String clueId, String[] activityId) {
+        int num = 0;
+        ClueActivityRelation clueActivityRelation = new ClueActivityRelation();
+        clueActivityRelation.setClueId(clueId);
+        for (String aid : activityId){
+            clueActivityRelation.setId(UUIDUtil.getUUID());
+            clueActivityRelation.setActivityId(aid);
+            num += clueActivityRelationDao.insertActClueRelation(clueActivityRelation);
+        }
+        if (num!=activityId.length){
+            throw new ClueException("关联市场活动失败！");
         }
     }
 
