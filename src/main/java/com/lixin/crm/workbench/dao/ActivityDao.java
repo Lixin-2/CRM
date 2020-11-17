@@ -18,4 +18,6 @@ public interface ActivityDao {
     int updateActivity(Activity activity);
 
     Activity selectActivityByIdForOwner(String id);
+
+    List<Activity> selectRelationListByCid(String clueId);
 }

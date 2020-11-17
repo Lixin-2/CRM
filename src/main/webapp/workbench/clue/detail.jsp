@@ -35,6 +35,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		});
 
 		showRemarkList()
+		showRelationList()
 
 		$("#remark").focus(function(){
 			if(cancelAndSaveBtnDefault){
@@ -261,6 +262,30 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		})
 	}
 
+	function showRelationList() {
+		$.ajax({
+			url:"workbench/clue/getRelationListByCid.do",
+			data:{
+				"clueId":"${clue.id}"
+			},
+			type:"post",
+			dataType:"json",
+			success:function (data) {
+				var html = ""
+				$.each(data,function (i,n) {
+					html+='<tr>'
+					html+='	<td>'+n.name+'</td>'
+					html+='	<td>'+n.startDate+'</td>'
+					html+='	<td>'+n.endDate+'</td>'
+					html+='	<td>'+n.owner+'</td>'
+					html+='	<td><a href="javascript:void(0);"  style="text-decoration: none;" onclick="deleteRelation(\''+n.id+'\')"><span class="glyphicon glyphicon-remove"></span>解除关联</a></td>'
+					html+='</tr>'
+				})
+				$("#ACRelBody").html(html);
+			}
+		})
+	}
+
 	function editRemark(id,noteContent) {
 		$("#noteContent").val(noteContent)
 		$("#remarkId").val(id)
@@ -285,6 +310,28 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				}
 			})
 		}
+	}
+
+	function deleteRelation(id) {
+		if(confirm("确定要解除该市场活动关联吗？")){
+			$.ajax({
+				url:"workbench/clue/deleteRelationByCAId.do",
+				data:{
+					"activityId":id,
+					"clueId":"${clue.id}"
+				},
+				type:"post",
+				dataType:"json",
+				success:function (data) {
+					if (data.success){
+						showRelationList()
+					}else{
+						alert(data.msg)
+					}
+				}
+			})
+		}
+
 	}
 
 </script>
@@ -652,7 +699,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							<td></td>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody id="ACRelBody">
 						<tr>
 							<td>发传单</td>
 							<td>2020-10-10</td>

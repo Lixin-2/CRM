@@ -3,11 +3,10 @@ package com.lixin.crm.workbench.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.lixin.crm.settings.dao.UserDao;
 import com.lixin.crm.settings.domain.User;
-import com.lixin.crm.workbench.dao.ClueActivityRelationDao;
-import com.lixin.crm.workbench.dao.ClueDao;
-import com.lixin.crm.workbench.dao.ClueRemarkDao;
-import com.lixin.crm.workbench.dao.ContactsActivityRelationDao;
+import com.lixin.crm.workbench.dao.*;
+import com.lixin.crm.workbench.domain.Activity;
 import com.lixin.crm.workbench.domain.Clue;
+import com.lixin.crm.workbench.domain.ClueActivityRelation;
 import com.lixin.crm.workbench.domain.ClueRemark;
 import com.lixin.crm.workbench.exception.ClueException;
 import com.lixin.crm.workbench.service.ClueService;
@@ -29,6 +28,8 @@ public class ClueServiceImpl implements ClueService {
     private ClueRemarkDao clueRemarkDao = null;
     @Autowired
     private ClueActivityRelationDao clueActivityRelationDao = null;
+    @Autowired
+    private ActivityDao activityDao = null;
 
     @Override
     public List<User> selectUsers() {
@@ -111,4 +112,20 @@ public class ClueServiceImpl implements ClueService {
             throw new ClueException("更新线索备注失败！");
         }
     }
+
+    @Override
+    public List<Activity> selectRelationListByCid(String clueId) {
+        List<Activity> activities = activityDao.selectRelationListByCid(clueId);
+        return activities;
+    }
+
+    @Override
+    public void deleteRelationByCAId(ClueActivityRelation clueActivityRelation) {
+        int num = clueActivityRelationDao.deleteRelationByCAId(clueActivityRelation);
+        if (num != 1){
+            throw new ClueException("解除市场活动关联失败！");
+        }
+    }
+
+
 }

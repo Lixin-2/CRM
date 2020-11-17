@@ -1,7 +1,9 @@
 package com.lixin.crm.workbench.service;
 
 import com.lixin.crm.settings.domain.User;
+import com.lixin.crm.workbench.domain.Activity;
 import com.lixin.crm.workbench.domain.Clue;
+import com.lixin.crm.workbench.domain.ClueActivityRelation;
 import com.lixin.crm.workbench.domain.ClueRemark;
 
 import java.util.List;
@@ -29,4 +31,8 @@ public interface ClueService {
     void insertClueRemark(ClueRemark clueRemark);
 
     void updateClueRemark(ClueRemark clueRemark);
+
+    List<Activity> selectRelationListByCid(String clueId);
+
+    void deleteRelationByCAId(ClueActivityRelation clueActivityRelation);
 }

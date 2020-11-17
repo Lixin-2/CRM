@@ -17,6 +17,10 @@
             #{cid}
         </foreach>
     </delete>
+
+    <delete id="deleteRelationByCAId">
+        delete from tbl_clue_activity_relation where activityId=#{activityId} and clueId=#{clueId}
+    </delete>
   	
 </mapper>
 

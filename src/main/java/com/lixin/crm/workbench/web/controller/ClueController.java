@@ -4,8 +4,8 @@ import com.lixin.crm.settings.domain.User;
 import com.lixin.crm.utils.DateTimeUtil;
 import com.lixin.crm.utils.UUIDUtil;
 import com.lixin.crm.workbench.domain.Activity;
-import com.lixin.crm.workbench.domain.ActivityRemark;
 import com.lixin.crm.workbench.domain.Clue;
+import com.lixin.crm.workbench.domain.ClueActivityRelation;
 import com.lixin.crm.workbench.domain.ClueRemark;
 import com.lixin.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,6 +128,22 @@ public class ClueController {
         Map<String,Object> info = new HashMap<>();
         info.put("success",true);
         info.put("clueRemark",clueRemark);
+        return info;
+    }
+
+    @RequestMapping("/getRelationListByCid.do")
+    @ResponseBody
+    private List<Activity> getRelationListByCid(String clueId){
+        List<Activity> activities = clueService.selectRelationListByCid(clueId);
+        return activities;
+    }
+
+    @RequestMapping("/deleteRelationByCAId.do")
+    @ResponseBody
+    private Map<String,Object> deleteRelationByCAId(ClueActivityRelation clueActivityRelation){
+        clueService.deleteRelationByCAId(clueActivityRelation);
+        Map<String,Object> info = new HashMap<>();
+        info.put("success",true);
         return info;
     }
 

@@ -61,4 +61,8 @@
     <select id="selectActivityByIdForOwner" resultType="Activity">
         select a.id,u.name as owner,a.name,a.startDate,a.endDate,a.cost,a.description,a.createTime,a.createBy,a.editTime,a.editBy from tbl_activity a left join tbl_user u on a.owner=u.id where a.id=#{id}
     </select>
+
+    <select id="selectRelationListByCid" resultType="Activity">
+        select a.id,u.name as owner,a.name,a.startDate,a.endDate,a.cost,a.description,a.createTime,a.createBy,a.editTime,a.editBy from tbl_activity a left join tbl_user u on a.owner=u.id where a.id in (select activityId from tbl_clue_activity_relation where clueId=#{clueId})
+    </select>
 </mapper>
