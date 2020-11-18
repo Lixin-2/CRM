@@ -163,4 +163,17 @@ public class ClueController {
         return info;
     }
 
+    @RequestMapping("/convertClue.do")
+    private String convertClue(HttpServletRequest request,String id){
+        Clue clue = clueService.selectClueByIdForOwner(id);
+        request.setAttribute("clue",clue);
+        return "forward:/workbench/clue/convert.jsp";
+    }
+
+    @RequestMapping("/getActivityByName.do")
+    @ResponseBody
+    private List<Activity> getActivityByName(String name){
+        List<Activity> activities = clueService.selectActivityByName(name);
+        return activities;
+    }
 }

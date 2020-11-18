@@ -39,4 +39,6 @@ public interface ClueService {
     List<Activity> selectActivityByNameAndNotClueIdForOwner(String name,String clueId);
 
     void insertActClueRelation(String clueId, String[] activityId);
+
+    List<Activity> selectActivityByName(String name);
 }

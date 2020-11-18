@@ -149,5 +149,11 @@ public class ClueServiceImpl implements ClueService {
         }
     }
 
+    @Override
+    public List<Activity> selectActivityByName(String name) {
+        List<Activity> activities = activityDao.selectActivityByNameForOwner(name);
+        return activities;
+    }
+
 
 }

@@ -77,4 +77,12 @@
             </if>
         </where>
     </select>
+    <select id="selectActivityByNameForOwner" resultType="Activity">
+        select a.id,u.name as owner,a.name,a.startDate,a.endDate,a.cost,a.description,a.createTime,a.createBy,a.editTime,a.editBy from tbl_activity a left join tbl_user u on a.owner=u.id
+        <where>
+            <if test="name!=null and name!=''">
+                a.name like '%' #{name} '%'
+            </if>
+        </where>
+    </select>
 </mapper>

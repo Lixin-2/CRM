@@ -23,4 +23,6 @@ public interface ActivityDao {
     List<Activity> selectRelationListByCid(String clueId);
 
     List<Activity> selectActivityByNameAndNotClueIdForOwner(@Param("name")String name, @Param("clueId") String clueId);
+
+    List<Activity> selectActivityByNameForOwner(String name);
 }
