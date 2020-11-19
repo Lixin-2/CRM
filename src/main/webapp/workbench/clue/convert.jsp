@@ -59,6 +59,32 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			$("#searchActivityModal").modal("hide")
 		})
 
+		$("#convertBtn").click(function () {
+			var flag = $("#isCreateTransaction").is(":checked");
+			if (confirm("你确定要转换此条记录吗?")){
+				$.ajax({
+					url:"",
+					data:{
+						"flag":flag,
+						"clueId":"${clue.id}",
+						"money":$.trim($("#amountOfMoney").val()),
+						"name":$.trim($("#tradeName").val()),
+						"expectedDate":$.trim($("#expectedClosingDate").val()),
+						"stage":$.trim($("#stage").val())
+					},
+					type:"post",
+					dataType: "json",
+					success:function (data) {
+						if (data.success){
+
+						}else{
+							alert(data.msg)
+						}
+					}
+				})
+			}
+		})
+
 	});
 
 	function getActivity() {
@@ -183,7 +209,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		<b>${clue.owner}</b>
 	</div>
 	<div id="operation" style="position: relative; left: 40px; height: 35px; top: 100px;">
-		<input class="btn btn-primary" type="button" value="转换">
+		<input class="btn btn-primary" type="button" value="转换" id="convertBtn">
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		<input class="btn btn-default" type="button" value="取消" onclick="window.history.back();">
 	</div>
