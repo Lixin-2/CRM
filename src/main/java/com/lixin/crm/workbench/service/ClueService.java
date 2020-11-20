@@ -1,10 +1,7 @@
 package com.lixin.crm.workbench.service;
 
 import com.lixin.crm.settings.domain.User;
-import com.lixin.crm.workbench.domain.Activity;
-import com.lixin.crm.workbench.domain.Clue;
-import com.lixin.crm.workbench.domain.ClueActivityRelation;
-import com.lixin.crm.workbench.domain.ClueRemark;
+import com.lixin.crm.workbench.domain.*;
 
 import java.util.List;
 import java.util.Map;
@@ -41,4 +38,6 @@ public interface ClueService {
     void insertActClueRelation(String clueId, String[] activityId);
 
     List<Activity> selectActivityByName(String name);
+
+    void convertClue(boolean flag, String clueId, Tran tran);
 }

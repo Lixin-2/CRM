@@ -15,4 +15,6 @@ public interface ClueRemarkDao {
     int insertClueRemark(ClueRemark clueRemark);
 
     int updateClueRemark(ClueRemark clueRemark);
+
+    void deleteClueRemarkByCId(String clueId);
 }

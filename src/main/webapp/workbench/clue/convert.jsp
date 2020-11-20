@@ -63,20 +63,21 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			var flag = $("#isCreateTransaction").is(":checked");
 			if (confirm("你确定要转换此条记录吗?")){
 				$.ajax({
-					url:"",
+					url:"workbench/clue/convert.do",
 					data:{
 						"flag":flag,
 						"clueId":"${clue.id}",
 						"money":$.trim($("#amountOfMoney").val()),
 						"name":$.trim($("#tradeName").val()),
 						"expectedDate":$.trim($("#expectedClosingDate").val()),
-						"stage":$.trim($("#stage").val())
+						"stage":$.trim($("#stage").val()),
+						"activityId":$.trim($("#activityId").val())
 					},
 					type:"post",
 					dataType: "json",
 					success:function (data) {
 						if (data.success){
-
+							window.history.go(-2)
 						}else{
 							alert(data.msg)
 						}

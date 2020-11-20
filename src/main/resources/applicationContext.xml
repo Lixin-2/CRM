@@ -35,6 +35,7 @@
             <tx:method name="insert*" propagation="REQUIRED" isolation="DEFAULT" rollback-for="java.lang.RuntimeException"/>
             <tx:method name="update*" propagation="REQUIRED" isolation="DEFAULT" rollback-for="java.lang.RuntimeException"/>
             <tx:method name="delete*" propagation="REQUIRED" isolation="DEFAULT" rollback-for="java.lang.RuntimeException"/>
+            <tx:method name="convertClue" propagation="REQUIRED" isolation="DEFAULT" rollback-for="java.lang.RuntimeException"/>
             <tx:method name="select*" propagation="REQUIRED" isolation="DEFAULT" read-only="true"/>
         </tx:attributes>
     </tx:advice>

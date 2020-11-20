@@ -5,15 +5,13 @@ import com.lixin.crm.settings.dao.UserDao;
 import com.lixin.crm.settings.domain.User;
 import com.lixin.crm.utils.UUIDUtil;
 import com.lixin.crm.workbench.dao.*;
-import com.lixin.crm.workbench.domain.Activity;
-import com.lixin.crm.workbench.domain.Clue;
-import com.lixin.crm.workbench.domain.ClueActivityRelation;
-import com.lixin.crm.workbench.domain.ClueRemark;
+import com.lixin.crm.workbench.domain.*;
 import com.lixin.crm.workbench.exception.ClueException;
 import com.lixin.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +29,14 @@ public class ClueServiceImpl implements ClueService {
     private ClueActivityRelationDao clueActivityRelationDao = null;
     @Autowired
     private ActivityDao activityDao = null;
+    @Autowired
+    private TranDao tranDao = null;
+    @Autowired
+    private TranHistoryDao tranHistoryDao = null;
+    @Autowired
+    private ContactsDao contactsDao = null;
+    @Autowired
+    private CustomerDao customerDao = null;
 
     @Override
     public List<User> selectUsers() {
@@ -153,6 +159,88 @@ public class ClueServiceImpl implements ClueService {
     public List<Activity> selectActivityByName(String name) {
         List<Activity> activities = activityDao.selectActivityByNameForOwner(name);
         return activities;
+    }
+
+    @Override
+    public void convertClue(boolean flag, String clueId, Tran tran) {
+        int num=0;
+        Clue clue = clueDao.selectClueById(clueId);
+
+        //客户
+        Customer customer = new Customer();
+        customer.setId(UUIDUtil.getUUID());
+        customer.setOwner(clue.getOwner());
+        customer.setName(clue.getCompany());
+        customer.setWebsite(clue.getWebsite());
+        customer.setPhone(clue.getPhone());
+        customer.setCreateBy(tran.getCreateBy());
+        customer.setCreateTime(tran.getCreateTime());
+        customer.setContactSummary(clue.getContactSummary());
+        customer.setNextContactTime(clue.getNextContactTime());
+        customer.setDescription(clue.getDescription());
+        customer.setAddress(clue.getAddress());
+
+        //联络人
+        Contacts contacts = new Contacts();
+        contacts.setId(UUIDUtil.getUUID());
+        contacts.setOwner(clue.getOwner());
+        contacts.setSource(clue.getSource());
+        contacts.setCustomerId(customer.getId());
+        contacts.setFullname(clue.getFullname());
+        contacts.setAppellation(clue.getAppellation());
+        contacts.setEmail(clue.getEmail());
+        contacts.setMphone(clue.getMphone());
+        contacts.setJob(clue.getJob());
+        contacts.setCreateBy(tran.getCreateBy());
+        contacts.setCreateTime(tran.getCreateTime());
+        contacts.setDescription(clue.getDescription());
+        contacts.setContactSummary(clue.getContactSummary());
+        contacts.setNextContactTime(clue.getNextContactTime());
+        contacts.setAddress(clue.getAddress());
+
+        if (flag){
+            //交易
+            tran.setOwner(clue.getOwner());
+            tran.setDescription(clue.getDescription());
+            tran.setContactSummary(clue.getContactSummary());
+            tran.setNextContactTime(clue.getNextContactTime());
+
+            //交易历史
+            TranHistory tranHistory = new TranHistory();
+            tranHistory.setId(UUIDUtil.getUUID());
+            tranHistory.setStage(tran.getStage());
+            tranHistory.setMoney(tran.getMoney());
+            tranHistory.setExpectedDate(tran.getExpectedDate());
+            tranHistory.setCreateBy(tran.getCreateBy());
+            tranHistory.setCreateTime(tran.getCreateTime());
+            tranHistory.setTranId(tran.getId());
+
+            num = tranDao.insertTran(tran);
+            if (num!=1){
+                throw new ClueException("转换线索时，添加交易记录失败！");
+            }
+            num = tranHistoryDao.insertTranHistory(tranHistory);
+            if (num!=1){
+                throw new ClueException("转换线索时，添加交易历史失败！");
+            }
+        }
+
+        num = contactsDao.insertContacts(contacts);
+        if (num!=1){
+            throw new ClueException("转换线索时，添加联系人失败！");
+        }
+        num = customerDao.insertCustacts(customer);
+        if (num!=1){
+            throw new ClueException("转换线索时，添加客户失败！");
+        }
+        clueRemarkDao.deleteClueRemarkByCId(clueId);
+        String[] clueIds = {clueId};
+        clueActivityRelationDao.deleteClueActRelByClueIds(clueIds);
+        num = clueDao.deleteClueByIds(clueIds);
+        if(num!=1){
+            throw new ClueException("转换线索时，删除线索失败！");
+        }
+
     }
 
 

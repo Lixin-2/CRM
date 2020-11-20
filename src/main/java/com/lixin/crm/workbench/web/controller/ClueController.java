@@ -3,10 +3,7 @@ package com.lixin.crm.workbench.web.controller;
 import com.lixin.crm.settings.domain.User;
 import com.lixin.crm.utils.DateTimeUtil;
 import com.lixin.crm.utils.UUIDUtil;
-import com.lixin.crm.workbench.domain.Activity;
-import com.lixin.crm.workbench.domain.Clue;
-import com.lixin.crm.workbench.domain.ClueActivityRelation;
-import com.lixin.crm.workbench.domain.ClueRemark;
+import com.lixin.crm.workbench.domain.*;
 import com.lixin.crm.workbench.service.ClueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -175,5 +172,17 @@ public class ClueController {
     private List<Activity> getActivityByName(String name){
         List<Activity> activities = clueService.selectActivityByName(name);
         return activities;
+    }
+
+    @RequestMapping("/convert.do")
+    @ResponseBody
+    private Map<String,Object> convert(HttpServletRequest request,boolean flag, String clueId, Tran tran){
+        tran.setId(UUIDUtil.getUUID());
+        tran.setCreateBy(((User) request.getSession().getAttribute("user")).getName());
+        tran.setCreateTime(DateTimeUtil.getSysTime());
+        clueService.convertClue(flag,clueId,tran);
+        Map<String,Object> info = new HashMap<>();
+        info.put("success",true);
+        return info;
     }
 }
