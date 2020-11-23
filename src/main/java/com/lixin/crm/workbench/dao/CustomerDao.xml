@@ -7,7 +7,62 @@
 	<insert id="insertCustacts">
         insert into tbl_customer (id,owner,name,website,phone,createBy,createTime,contactSummary,nextContactTime,description,address) values (#{id},#{owner},#{name},#{website},#{phone},#{createBy},#{createTime},#{contactSummary},#{nextContactTime},#{description},#{address});
     </insert>
-  	
+
+    <select id="selectCountTotal" resultType="int">
+        select count(*) from tbl_customer c left join tbl_user u on c.owner=u.id
+        <where>
+            <if test="owner!=null and owner!=''">
+                u.name like '%' #{owner} '%'
+            </if>
+            <if test="name!=null and name!=''">
+                and c.name like '%' #{name} '%'
+            </if>
+            <if test="website!=null and website!=''">
+                and c.website like '%' #{website} '%'
+            </if>
+            <if test="phone!=null and phone!=''">
+                and c.phone like '%' #{phone} '%'
+            </if>
+        </where>
+    </select>
+
+    <select id="selectCustomerPageList" resultType="Customer">
+        select c.id,u.name as owner,c.name,c.website,c.phone,c.createBy,c.createTime,c.editBy,c.editTime,c.contactSummary,c.nextContactTime,c.description,c.address from tbl_customer c left join tbl_user u on c.owner=u.id
+        <where>
+            <if test="owner!=null and owner!=''">
+                u.name like '%' #{owner} '%'
+            </if>
+            <if test="name!=null and name!=''">
+                and c.name like '%' #{name} '%'
+            </if>
+            <if test="website!=null and website!=''">
+                and c.website like '%' #{website} '%'
+            </if>
+            <if test="phone!=null and phone!=''">
+                and c.phone like '%' #{phone} '%'
+            </if>
+        </where>
+        order by c.createTime desc
+    </select>
+    
+    <select id="selectCustomerById" resultType="Customer">
+        select id,owner,name,website,phone,createBy,createTime,editBy,editTime,contactSummary,nextContactTime,description,address from tbl_customer where id=#{id} ;
+    </select>
+
+    <update id="updateCustomer">
+        update tbl_customer set owner=#{owner},name=#{name},website=#{website},phone=#{phone},editBy=#{editBy},editTime=#{editTime},contactSummary=#{contactSummary},nextContactTime=#{nextContactTime},description=#{description},address=#{address} where id=#{id};
+    </update>
+
+    <delete id="deleteCustomerByIds">
+        delete from tbl_customer where id in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectCustomerByIdForOwner" resultType="Customer">
+        select c.id,u.name as owner,c.name,c.website,c.phone,c.createBy,c.createTime,c.editBy,c.editTime,c.contactSummary,c.nextContactTime,c.description,c.address from tbl_customer c left join tbl_user u on c.owner=u.id where c.id=#{id}
+    </select>
 </mapper>
 
 

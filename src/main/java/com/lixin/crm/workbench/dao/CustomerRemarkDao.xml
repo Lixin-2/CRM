@@ -4,7 +4,12 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.lixin.crm.workbench.dao.CustomerRemarkDao">
-	
+	<delete id="deleteRemarkByCusIds">
+        delete from tbl_customer_remark where customerId in
+        <foreach collection="array" item="cusId" open="(" close=")" separator=",">
+            #{cusId}
+        </foreach>
+    </delete>
   	
 </mapper>
 
