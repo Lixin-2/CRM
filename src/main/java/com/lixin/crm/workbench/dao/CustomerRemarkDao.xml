@@ -10,7 +10,22 @@
             #{cusId}
         </foreach>
     </delete>
-  	
+
+    <select id="selectCustomerRemarkByCusId" resultType="CustomerRemark">
+        select id,noteContent,createBy,createTime,editBy,editTime,editFlag,customerId from tbl_customer_remark where customerId=#{customerId}
+    </select>
+
+    <delete id="deleteRemarkById">
+        delete from tbl_customer_remark where id=#{id}
+    </delete>
+
+    <update id="updateCustomerRemark">
+        update tbl_customer_remark set noteContent=#{noteContent}, editBy=#{editBy}, editTime=#{editTime}, editFlag=#{editFlag}  where id=#{id};
+    </update>
+    
+    <insert id="insertCustomerRemark">
+        insert into tbl_customer_remark (id,noteContent,createBy,createTime,editFlag,customerId) values (#{id},#{noteContent},#{createBy},#{createTime},#{editFlag},#{customerId});
+    </insert>
 </mapper>
 
 

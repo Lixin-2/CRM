@@ -6,6 +6,7 @@ import com.lixin.crm.settings.domain.User;
 import com.lixin.crm.workbench.dao.CustomerDao;
 import com.lixin.crm.workbench.dao.CustomerRemarkDao;
 import com.lixin.crm.workbench.domain.Customer;
+import com.lixin.crm.workbench.domain.CustomerRemark;
 import com.lixin.crm.workbench.exception.CustomerException;
 import com.lixin.crm.workbench.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,5 +79,35 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer selectCustomerByIdForOwner(String id) {
         Customer customer = customerDao.selectCustomerByIdForOwner(id);
         return customer;
+    }
+
+    @Override
+    public List<CustomerRemark> selectCustomerRemarkByCusId(String customerId) {
+        List<CustomerRemark> customerRemarks = customerRemarkDao.selectCustomerRemarkByCusId(customerId);
+        return customerRemarks;
+    }
+
+    @Override
+    public void deleteCustomerRemarkById(String id) {
+        int num = customerRemarkDao.deleteRemarkById(id);
+        if (num!=1){
+            throw new CustomerException("删除客户备注失败！");
+        }
+    }
+
+    @Override
+    public void updateCustomerRemark(CustomerRemark customerRemark) {
+        int num = customerRemarkDao.updateCustomerRemark(customerRemark);
+        if (num!=1){
+            throw new CustomerException("更新客户备注失败！");
+        }
+    }
+
+    @Override
+    public void insertCustomerRemark(CustomerRemark customerRemark) {
+        int num = customerRemarkDao.insertCustomerRemark(customerRemark);
+        if (num!=1){
+            throw new CustomerException("更新客户备注失败！");
+        }
     }
 }

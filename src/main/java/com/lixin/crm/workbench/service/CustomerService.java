@@ -2,6 +2,7 @@ package com.lixin.crm.workbench.service;
 
 import com.lixin.crm.settings.domain.User;
 import com.lixin.crm.workbench.domain.Customer;
+import com.lixin.crm.workbench.domain.CustomerRemark;
 
 import java.util.List;
 import java.util.Map;
@@ -20,4 +21,12 @@ public interface CustomerService {
     void deleteCustomerByIds(String[] id);
 
     Customer selectCustomerByIdForOwner(String id);
+
+    List<CustomerRemark> selectCustomerRemarkByCusId(String customerId);
+
+    void deleteCustomerRemarkById(String id);
+
+    void updateCustomerRemark(CustomerRemark customerRemark);
+
+    void insertCustomerRemark(CustomerRemark customerRemark);
 }

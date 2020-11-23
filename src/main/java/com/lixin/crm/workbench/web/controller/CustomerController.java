@@ -5,6 +5,7 @@ import com.lixin.crm.utils.DateTimeUtil;
 import com.lixin.crm.utils.UUIDUtil;
 import com.lixin.crm.workbench.domain.Clue;
 import com.lixin.crm.workbench.domain.Customer;
+import com.lixin.crm.workbench.domain.CustomerRemark;
 import com.lixin.crm.workbench.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -78,10 +79,55 @@ public class CustomerController {
         info.put("success",true);
         return info;
     }
+
+
     @RequestMapping("/selectCustomerById.do")
     public String selectCustomerById(HttpServletRequest request,String id){
         Customer customer = customerService.selectCustomerByIdForOwner(id);
         request.setAttribute("customer",customer);
         return "forward:/workbench/customer/detail.jsp";
+    }
+
+    @RequestMapping("/getRemarkListByCusId.do")
+    @ResponseBody
+    public List<CustomerRemark> getRemarkListByCusId(String customerId){
+        List<CustomerRemark> customerRemarks = customerService.selectCustomerRemarkByCusId(customerId);
+        return customerRemarks;
+    }
+
+    @RequestMapping("/deleteRemarkById.do")
+    @ResponseBody
+    public Map<String,Object> deleteRemarkById(String id){
+        customerService.deleteCustomerRemarkById(id);
+        Map<String,Object> info = new HashMap<>();
+        info.put("success",true);
+        return info;
+    }
+
+    @RequestMapping("/updateRemark.do")
+    @ResponseBody
+    public Map<String,Object> updateRemark(HttpServletRequest request,CustomerRemark customerRemark){
+        customerRemark.setEditBy(((User) request.getSession().getAttribute("user")).getName());
+        customerRemark.setEditTime(DateTimeUtil.getSysTime());
+        customerRemark.setEditFlag("1");
+        customerService.updateCustomerRemark(customerRemark);
+        Map<String,Object> info = new HashMap<>();
+        info.put("success",true);
+        info.put("customerRemark",customerRemark);
+        return info;
+    }
+
+    @RequestMapping("/saveCustomerRemark.do")
+    @ResponseBody
+    public Map<String,Object> saveCustomerRemark(HttpServletRequest request,CustomerRemark customerRemark){
+        customerRemark.setId(UUIDUtil.getUUID());
+        customerRemark.setCreateBy(((User) request.getSession().getAttribute("user")).getName());
+        customerRemark.setCreateTime(DateTimeUtil.getSysTime());
+        customerRemark.setEditFlag("0");
+        customerService.insertCustomerRemark(customerRemark);
+        Map<String,Object> info = new HashMap<>();
+        info.put("success",true);
+        info.put("customerRemark",customerRemark);
+        return info;
     }
 }
